@@ -487,7 +487,7 @@ export default function CalculatorPage() {
                 generating this revenue within 60-90 days.
               </p>
               <a
-                href="https://cal.com"
+                href="https://cal.com/agentartemis/30-minutes-with-jeff-oldroyd"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block bg-[#22c55e] hover:bg-[#16a34a] text-white text-lg font-bold px-10 py-4 rounded-xl transition-all transform hover:scale-105 shadow-lg"
