@@ -1,0 +1,38 @@
+import { NextResponse } from "next/server";
+import { getStripe } from "@/lib/stripe";
+
+export async function POST() {
+  try {
+    const stripe = getStripe();
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price_data: {
+            currency: "usd",
+            product_data: {
+              name: "CCM Revenue Calculator",
+              description:
+                "Calculate your practice's untapped Chronic Care Management revenue potential. One-time payment, lifetime access.",
+            },
+            unit_amount: 4900,
+          },
+          quantity: 1,
+        },
+      ],
+      mode: "payment",
+      success_url: `${appUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${appUrl}/`,
+    });
+
+    return NextResponse.json({ url: session.url });
+  } catch (error) {
+    console.error("Checkout error:", error);
+    return NextResponse.json(
+      { error: "Failed to create checkout session" },
+      { status: 500 }
+    );
+  }
+}
