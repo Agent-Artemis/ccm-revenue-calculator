@@ -4,7 +4,7 @@ import { getStripe } from "@/lib/stripe";
 export async function POST() {
   try {
     const stripe = getStripe();
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const appUrl = (process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000").trim();
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
