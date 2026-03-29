@@ -15,6 +15,9 @@ interface Inputs {
   numRNs: number;
   numLPNs: number;
   numMAs: number;
+  rnCost: number;
+  lpnCost: number;
+  maCost: number;
 }
 
 const defaultInputs: Inputs = {
@@ -29,11 +32,10 @@ const defaultInputs: Inputs = {
   numRNs: 1,
   numLPNs: 1,
   numMAs: 0,
+  rnCost: 75000,
+  lpnCost: 55000,
+  maCost: 40000,
 };
-
-const RN_COST = 75000;
-const LPN_COST = 55000;
-const MA_COST = 40000;
 const PATIENTS_PER_RN = 150;
 const PATIENTS_PER_LPN = 200;
 const PATIENTS_PER_MA = 250;
@@ -173,9 +175,9 @@ export default function CalculatorPage() {
         : annualRevenue;
 
     const totalStaffCost =
-      inputs.numRNs * RN_COST +
-      inputs.numLPNs * LPN_COST +
-      inputs.numMAs * MA_COST;
+      inputs.numRNs * inputs.rnCost +
+      inputs.numLPNs * inputs.lpnCost +
+      inputs.numMAs * inputs.maCost;
 
     const netProfit = annualRevenue - totalStaffCost;
     const roiPct =
@@ -240,6 +242,7 @@ export default function CalculatorPage() {
       `Patients with 2+ Chronic Conditions: ${inputs.chronicPct}%`,
       `Enrollment Rate: ${inputs.enrollmentRate}%`,
       `Revenue per Patient/Month: $${inputs.revenuePerPatient}`,
+      `Staffing: ${inputs.numRNs} RN ($${(inputs.rnCost/1000).toFixed(0)}k), ${inputs.numLPNs} LPN ($${(inputs.lpnCost/1000).toFixed(0)}k), ${inputs.numMAs} MA ($${(inputs.maCost/1000).toFixed(0)}k)`,
       `Providers: ${inputs.numProviders}`,
       `Payer Mix: Medicare ${inputs.medicarePct}% / Medicaid ${inputs.medicaidPct}% / Commercial ${inputs.commercialPct}%`,
     ].forEach((line, i) => doc.text(line, 20, 80 + i * 7));
@@ -400,24 +403,51 @@ export default function CalculatorPage() {
                 CCM Staffing
               </h2>
               <div className="space-y-4">
-                <InputField
-                  label="Registered Nurses (RNs)"
-                  value={inputs.numRNs}
-                  onChange={(v) => update("numRNs", v)}
-                  helpText={`~${PATIENTS_PER_RN} patients/RN · $${(RN_COST / 1000).toFixed(0)}k/year`}
-                />
-                <InputField
-                  label="Licensed Practical Nurses (LPNs)"
-                  value={inputs.numLPNs}
-                  onChange={(v) => update("numLPNs", v)}
-                  helpText={`~${PATIENTS_PER_LPN} patients/LPN · $${(LPN_COST / 1000).toFixed(0)}k/year`}
-                />
-                <InputField
-                  label="Medical Assistants (MAs)"
-                  value={inputs.numMAs}
-                  onChange={(v) => update("numMAs", v)}
-                  helpText={`~${PATIENTS_PER_MA} patients/MA · $${(MA_COST / 1000).toFixed(0)}k/year`}
-                />
+                <div className="grid grid-cols-2 gap-3">
+                  <InputField
+                    label="RNs (count)"
+                    value={inputs.numRNs}
+                    onChange={(v) => update("numRNs", v)}
+                    helpText={`~${PATIENTS_PER_RN} patients/RN`}
+                  />
+                  <InputField
+                    label="RN Salary ($/yr)"
+                    value={inputs.rnCost}
+                    onChange={(v) => update("rnCost", v)}
+                    helpText="Nat'l avg: $75,000"
+                    step={1000}
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <InputField
+                    label="LPNs (count)"
+                    value={inputs.numLPNs}
+                    onChange={(v) => update("numLPNs", v)}
+                    helpText={`~${PATIENTS_PER_LPN} patients/LPN`}
+                  />
+                  <InputField
+                    label="LPN Salary ($/yr)"
+                    value={inputs.lpnCost}
+                    onChange={(v) => update("lpnCost", v)}
+                    helpText="Nat'l avg: $55,000"
+                    step={1000}
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <InputField
+                    label="MAs (count)"
+                    value={inputs.numMAs}
+                    onChange={(v) => update("numMAs", v)}
+                    helpText={`~${PATIENTS_PER_MA} patients/MA`}
+                  />
+                  <InputField
+                    label="MA Salary ($/yr)"
+                    value={inputs.maCost}
+                    onChange={(v) => update("maCost", v)}
+                    helpText="Nat'l avg: $40,000"
+                    step={1000}
+                  />
+                </div>
               </div>
             </div>
           </div>
