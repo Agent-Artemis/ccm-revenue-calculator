@@ -57,10 +57,10 @@ export default function LandingPage() {
           >
             {loading === "hero"
               ? "Redirecting to checkout..."
-              : "Calculate My Revenue — $79 for Both"}
+              : "Calculate My Revenue — $49 for Both"}
           </button>
           <p className="mt-4 text-blue-200 text-sm">
-            One-time payment. Instant access. No subscription. Save $19 with the
+            One-time payment. Instant access. No subscription. Save $9 with the
             bundle.
           </p>
         </div>
@@ -158,13 +158,14 @@ export default function LandingPage() {
                 Chronic Care Management revenue projections
               </p>
               <div className="text-4xl font-extrabold text-[#1e3a5f] mb-6">
-                $49
+                $29
               </div>
               <ul className="space-y-2 mb-8 flex-grow">
                 {[
                   "CCM revenue projections",
                   "Payer mix breakdown",
                   "Staffing ROI analysis",
+                  "Downloadable PDF report",
                   "Lifetime access",
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
@@ -194,14 +195,15 @@ export default function LandingPage() {
                 Both calculators — save $19
               </p>
               <div className="text-4xl font-extrabold text-[#22c55e] mb-1">
-                $79
+                $49
               </div>
-              <p className="text-sm text-gray-400 line-through mb-5">$98</p>
+              <p className="text-sm text-gray-400 line-through mb-5">$58</p>
               <ul className="space-y-2 mb-8 flex-grow">
                 {[
                   "Everything in CCM Calculator",
                   "Everything in RPM Calculator",
                   "Combined revenue dashboard",
+                  "Downloadable PDF reports",
                   "Priority strategy call booking",
                   "Lifetime access to both",
                 ].map((item, i) => (
@@ -218,7 +220,7 @@ export default function LandingPage() {
                 disabled={loading === "bundle"}
                 className="w-full bg-[#22c55e] hover:bg-[#16a34a] text-white font-bold py-3 rounded-xl transition-colors disabled:opacity-50"
               >
-                {loading === "bundle" ? "Loading..." : "Get Both — $79"}
+                {loading === "bundle" ? "Loading..." : "Get Both — $49"}
               </button>
             </div>
 
@@ -231,13 +233,14 @@ export default function LandingPage() {
                 Remote Patient Monitoring revenue projections
               </p>
               <div className="text-4xl font-extrabold text-[#1e3a5f] mb-6">
-                $49
+                $29
               </div>
               <ul className="space-y-2 mb-8 flex-grow">
                 {[
                   "RPM revenue projections",
                   "Device cost analysis",
                   "Staffing ROI analysis",
+                  "Downloadable PDF report",
                   "Lifetime access",
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
@@ -315,7 +318,7 @@ export default function LandingPage() {
               },
               {
                 q: "Should I get CCM, RPM, or both?",
-                a: "If your practice serves Medicare patients with chronic conditions, both programs apply. Many patients qualify for CCM and RPM simultaneously, and the revenue stacks. The bundle gives you the complete picture for just $79.",
+                a: "If your practice serves Medicare patients with chronic conditions, both programs apply. Many patients qualify for CCM and RPM simultaneously, and the revenue stacks. The bundle gives you the complete picture for just $49.",
               },
               {
                 q: "What if I need help implementing?",
@@ -355,7 +358,7 @@ export default function LandingPage() {
           >
             {loading === "final"
               ? "Loading..."
-              : "Get Both Calculators — $79"}
+              : "Get Both Calculators — $49"}
           </button>
         </div>
       </section>

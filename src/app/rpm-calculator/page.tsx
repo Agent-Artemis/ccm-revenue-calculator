@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
+import jsPDF from "jspdf";
 
 interface Inputs {
   totalPatients: number;
@@ -130,11 +131,30 @@ function ResultCard({
   );
 }
 
+type Scenario = "conservative" | "realistic" | "aggressive";
+
+const scenarioPresets: Record<Scenario, { enrollmentRate: number; revenuePerPatient: number; label: string; description: string }> = {
+  conservative: { enrollmentRate: 15, revenuePerPatient: 103, label: "Conservative", description: "15% enrollment, basic monitoring ($103/pt)" },
+  realistic: { enrollmentRate: 25, revenuePerPatient: 112, label: "Realistic", description: "25% enrollment, new program mix ($112/pt)" },
+  aggressive: { enrollmentRate: 40, revenuePerPatient: 135, label: "Aggressive", description: "40% enrollment, mature program ($135/pt)" },
+};
+
 export default function RPMCalculatorPage() {
   const [inputs, setInputs] = useState<Inputs>(defaultInputs);
+  const [scenario, setScenario] = useState<Scenario>("realistic");
 
   const update = (key: keyof Inputs, value: number) => {
     setInputs((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const applyScenario = (s: Scenario) => {
+    setScenario(s);
+    const preset = scenarioPresets[s];
+    setInputs((prev) => ({
+      ...prev,
+      enrollmentRate: preset.enrollmentRate,
+      revenuePerPatient: preset.revenuePerPatient,
+    }));
   };
 
   const results = useMemo(() => {
@@ -204,12 +224,80 @@ export default function RPMCalculatorPage() {
     };
   }, [inputs]);
 
+  const generatePDF = useCallback(() => {
+    const doc = new jsPDF();
+    const f = (n: number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(n);
+    doc.setFontSize(22);
+    doc.setTextColor(30, 58, 95);
+    doc.text("RPM Revenue Analysis", 20, 25);
+    doc.setFontSize(10);
+    doc.setTextColor(100);
+    doc.text(`Prepared by HCIP | ${new Date().toLocaleDateString()}`, 20, 33);
+    doc.setDrawColor(30, 58, 95);
+    doc.line(20, 37, 190, 37);
+    doc.setFontSize(14);
+    doc.setTextColor(8, 145, 178);
+    doc.text(`Monthly Revenue: ${f(results.monthlyRevenue)}`, 20, 48);
+    doc.text(`Annual Revenue: ${f(results.annualRevenue)}`, 20, 57);
+    doc.setFontSize(12);
+    doc.setTextColor(30, 58, 95);
+    doc.text("Practice Inputs", 20, 72);
+    doc.setFontSize(10);
+    doc.setTextColor(60);
+    [
+      `Total Patient Panel: ${inputs.totalPatients.toLocaleString()}`,
+      `Patients with RPM-Qualifying Conditions: ${inputs.qualifyingPct}%`,
+      `Enrollment Rate: ${inputs.enrollmentRate}%`,
+      `Revenue per Patient/Month: $${inputs.revenuePerPatient}`,
+      `Device Cost per Patient/Month: $${inputs.deviceCostPerPatient}`,
+      `Providers: ${inputs.numProviders}`,
+      `Payer Mix: Medicare ${inputs.medicarePct}% / Medicaid ${inputs.medicaidPct}% / Commercial ${inputs.commercialPct}%`,
+    ].forEach((line, i) => doc.text(line, 20, 80 + i * 7));
+    doc.setFontSize(12);
+    doc.setTextColor(30, 58, 95);
+    doc.text("Key Results", 20, 135);
+    doc.setFontSize(10);
+    doc.setTextColor(60);
+    [
+      `Eligible Patients: ${results.eligiblePatients.toLocaleString()}`,
+      `Enrolled Patients: ${results.enrolledPatients.toLocaleString()}`,
+      `Revenue per Provider: ${f(results.revenuePerProvider)}`,
+      `Annual Staff Cost: ${f(results.totalStaffCost)}`,
+      `Annual Device Cost: ${f(results.annualDeviceCost)}`,
+      `Total Annual Cost: ${f(results.totalAnnualCost)}`,
+      `Net Annual Profit: ${f(results.netProfit)}`,
+      `ROI: ${results.roiPct.toFixed(0)}%`,
+    ].forEach((line, i) => doc.text(line, 20, 143 + i * 7));
+    doc.setFontSize(12);
+    doc.setTextColor(30, 58, 95);
+    doc.text("Payer Breakdown (Monthly)", 20, 205);
+    doc.setFontSize(10);
+    doc.setTextColor(60);
+    doc.text(`Medicare (${inputs.medicarePct}%): ${f(results.medicareRevenue)}/mo`, 20, 213);
+    doc.text(`Medicaid (${inputs.medicaidPct}%): ${f(results.medicaidRevenue)}/mo`, 20, 220);
+    doc.text(`Commercial (${inputs.commercialPct}%): ${f(results.commercialRevenue)}/mo`, 20, 227);
+    doc.setDrawColor(30, 58, 95);
+    doc.line(20, 242, 190, 242);
+    doc.setFontSize(11);
+    doc.setTextColor(30, 58, 95);
+    doc.text("Ready to launch your RPM program?", 20, 252);
+    doc.setFontSize(10);
+    doc.setTextColor(100);
+    doc.text("Book a free 30-minute strategy call:", 20, 259);
+    doc.setTextColor(8, 145, 178);
+    doc.text("https://cal.com/agentartemis/30-minutes-with-jeff-oldroyd", 20, 266);
+    doc.setFontSize(8);
+    doc.setTextColor(150);
+    doc.text("HCIP - Health Care Industry Partners | Confidential", 20, 280);
+    doc.save("RPM-Revenue-Analysis.pdf");
+  }, [inputs, results]);
+
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-[#1e3a5f] text-white py-4">
         <div className="max-w-6xl mx-auto px-6 flex justify-between items-center">
           <div className="text-xl font-bold tracking-tight">
-            Augeo <span className="text-[#0891b2]">Healthcare</span>
+            HCIP <span className="text-[#0891b2]">Healthcare</span>
           </div>
           <div className="text-sm text-blue-200">RPM Revenue Calculator</div>
         </div>
@@ -357,6 +445,27 @@ export default function RPMCalculatorPage() {
 
           {/* Results Column */}
           <div className="lg:col-span-3 space-y-6">
+            {/* Scenario Toggle */}
+            <div className="bg-white rounded-xl border border-gray-200 p-6">
+              <h3 className="text-lg font-bold text-[#1e3a5f] mb-3">
+                ROI Scenario
+              </h3>
+              <div className="grid grid-cols-3 gap-2">
+                {(Object.keys(scenarioPresets) as Scenario[]).map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => applyScenario(s)}
+                    className={`p-3 rounded-lg text-sm font-semibold transition-all ${scenario === s ? "bg-[#1e3a5f] text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
+                  >
+                    <div>{scenarioPresets[s].label}</div>
+                    <div className={`text-xs mt-1 ${scenario === s ? "text-blue-200" : "text-gray-400"}`}>
+                      {scenarioPresets[s].description}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <div className="grid sm:grid-cols-2 gap-4">
               <ResultCard
                 label="Monthly RPM Revenue"
@@ -495,6 +604,14 @@ export default function RPMCalculatorPage() {
                 </div>
               </div>
             </div>
+
+            {/* PDF Export */}
+            <button
+              onClick={generatePDF}
+              className="w-full bg-white border-2 border-[#1e3a5f] text-[#1e3a5f] hover:bg-[#1e3a5f] hover:text-white font-bold py-4 rounded-xl transition-colors text-lg"
+            >
+              Download PDF Report
+            </button>
 
             {/* CTA */}
             <div className="bg-[#1e3a5f] rounded-xl p-8 text-center text-white">

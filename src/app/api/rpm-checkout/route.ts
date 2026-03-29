@@ -19,7 +19,7 @@ export async function POST() {
               description:
                 "Calculate your practice's untapped Remote Patient Monitoring revenue potential. One-time payment, lifetime access.",
             },
-            unit_amount: 4900,
+            unit_amount: 2900,
           },
           quantity: 1,
         },

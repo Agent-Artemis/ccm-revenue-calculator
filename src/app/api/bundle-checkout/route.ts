@@ -19,7 +19,7 @@ export async function POST() {
               description:
                 "Both calculators: Chronic Care Management AND Remote Patient Monitoring. Calculate your complete care management revenue potential. One-time payment, lifetime access.",
             },
-            unit_amount: 7900,
+            unit_amount: 4900,
           },
           quantity: 1,
         },
