@@ -54,10 +54,10 @@ A paid web tool ($49 one-time) that helps healthcare practices calculate their u
 5. `/success` -- Post-payment redirect, links to calculator
 
 ## Environment Variables (Vercel)
-- `STRIPE_SECRET_KEY` = REDACTED
-- `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` = pk_test_51TFnT9Q61mXczM8k4MykyWNvBYfv9tkpoBUH6ENTXDVl6rXELxSY41qoPfPqxeZNZPmUu65kZHqpJF0he7HD89lr00RHATS1bY
+- `STRIPE_SECRET_KEY` = (set in Vercel env vars)
+- `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` = (set in Vercel env vars)
 - `STRIPE_WEBHOOK_SECRET` = (set after webhook creation)
-- `NEXT_PUBLIC_APP_URL` = (Vercel deployment URL initially)
+- `NEXT_PUBLIC_APP_URL` = (Vercel deployment URL)
 
 ## Design Direction
 - Clean, professional, healthcare-appropriate
