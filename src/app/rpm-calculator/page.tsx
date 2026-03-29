@@ -24,7 +24,7 @@ const defaultInputs: Inputs = {
   medicaidPct: 15,
   commercialPct: 15,
   enrollmentRate: 25,
-  revenuePerPatient: 106,
+  revenuePerPatient: 112,
   deviceCostPerPatient: 50,
   numProviders: 3,
   numRNs: 1,
@@ -316,7 +316,7 @@ export default function RPMCalculatorPage() {
                   value={inputs.revenuePerPatient}
                   onChange={(v) => update("revenuePerPatient", v)}
                   suffix="$/mo"
-                  helpText="$106 default based on 95% basic ($103) + 5% full monitoring ($159)."
+                  helpText="$112 default based on new program mix: 82% basic ($103) + 18% full ($159)."
                 />
                 <InputField
                   label="Device Cost per Patient/Month"
