@@ -3,22 +3,22 @@
 import { useState } from "react";
 
 export default function LandingPage() {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<string | null>(null);
 
-  const handleCheckout = async () => {
-    setLoading(true);
+  const handleCheckout = async (endpoint: string, id: string) => {
+    setLoading(id);
     try {
-      const res = await fetch("/api/checkout", { method: "POST" });
+      const res = await fetch(endpoint, { method: "POST" });
       const data = await res.json();
       if (data.url) {
         window.location.href = data.url;
       } else {
         alert("Something went wrong. Please try again.");
-        setLoading(false);
+        setLoading(null);
       }
     } catch {
       alert("Something went wrong. Please try again.");
-      setLoading(false);
+      setLoading(null);
     }
   };
 
@@ -31,11 +31,11 @@ export default function LandingPage() {
             Augeo <span className="text-[#22c55e]">Healthcare</span>
           </div>
           <button
-            onClick={handleCheckout}
-            disabled={loading}
+            onClick={() => handleCheckout("/api/bundle-checkout", "nav")}
+            disabled={loading === "nav"}
             className="bg-[#22c55e] hover:bg-[#16a34a] text-white font-semibold px-5 py-2 rounded-lg transition-colors disabled:opacity-50"
           >
-            {loading ? "Loading..." : "Get Started"}
+            {loading === "nav" ? "Loading..." : "Get Both Calculators"}
           </button>
         </nav>
 
@@ -46,21 +46,22 @@ export default function LandingPage() {
             Month
           </h1>
           <p className="text-xl md:text-2xl text-blue-100 mb-10 max-w-2xl mx-auto text-balance">
-            Most practices with 500+ Medicare patients are missing $30,000 to
-            $150,000 per year in Chronic Care Management revenue. Find out your
-            exact number.
+            Most practices with 500+ Medicare patients are missing $50,000 to
+            $300,000 per year in CCM and RPM revenue. Find out your exact
+            number.
           </p>
           <button
-            onClick={handleCheckout}
-            disabled={loading}
+            onClick={() => handleCheckout("/api/bundle-checkout", "hero")}
+            disabled={loading === "hero"}
             className="bg-[#22c55e] hover:bg-[#16a34a] text-white text-lg md:text-xl font-bold px-10 py-5 rounded-xl transition-all transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:transform-none"
           >
-            {loading
+            {loading === "hero"
               ? "Redirecting to checkout..."
-              : "Calculate My Revenue — $49"}
+              : "Calculate My Revenue — $79 for Both"}
           </button>
           <p className="mt-4 text-blue-200 text-sm">
-            One-time payment. Instant access. No subscription.
+            One-time payment. Instant access. No subscription. Save $19 with the
+            bundle.
           </p>
         </div>
       </header>
@@ -69,42 +70,44 @@ export default function LandingPage() {
       <section className="py-20 bg-gray-50">
         <div className="max-w-5xl mx-auto px-6">
           <h2 className="text-3xl md:text-4xl font-bold text-center text-[#1e3a5f] mb-12">
-            Why Most Practices Miss This Revenue
+            Two Revenue Streams Most Practices Ignore
           </h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
-              <div className="text-4xl mb-4">📊</div>
-              <h3 className="text-xl font-bold text-[#1e3a5f] mb-3">
-                They Don&apos;t Know the Numbers
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="bg-white p-8 rounded-xl shadow-sm border-2 border-[#22c55e]">
+              <div className="text-4xl mb-4">💊</div>
+              <h3 className="text-2xl font-bold text-[#1e3a5f] mb-3">
+                Chronic Care Management
               </h3>
-              <p className="text-gray-600">
-                68% of Medicare patients qualify for CCM, but most practices
-                have never calculated their actual revenue opportunity. The
-                number is almost always bigger than expected.
+              <p className="text-gray-600 mb-4">
+                CMS pays $62-$109 per patient per month for coordinating care
+                for patients with 2+ chronic conditions. 68% of Medicare
+                patients qualify.
               </p>
+              <div className="text-[#22c55e] font-bold text-lg">
+                CPT 99490 / 99439 / 99491
+              </div>
             </div>
-            <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
-              <div className="text-4xl mb-4">⚙️</div>
-              <h3 className="text-xl font-bold text-[#1e3a5f] mb-3">
-                Implementation Feels Complex
+            <div className="bg-white p-8 rounded-xl shadow-sm border-2 border-[#0891b2]">
+              <div className="text-4xl mb-4">📡</div>
+              <h3 className="text-2xl font-bold text-[#1e3a5f] mb-3">
+                Remote Patient Monitoring
               </h3>
-              <p className="text-gray-600">
-                Billing codes, staffing models, compliance requirements — it
-                looks overwhelming from the outside. But with the right
-                framework, it&apos;s straightforward.
+              <p className="text-gray-600 mb-4">
+                CMS pays $103-$159 per patient per month for monitoring patients
+                with connected devices. Hypertension, diabetes, COPD, CHF all
+                qualify.
               </p>
+              <div className="text-[#0891b2] font-bold text-lg">
+                CPT 99453 / 99454 / 99457 / 99458
+              </div>
             </div>
-            <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
-              <div className="text-4xl mb-4">💰</div>
-              <h3 className="text-xl font-bold text-[#1e3a5f] mb-3">
-                The Money Is Real
-              </h3>
-              <p className="text-gray-600">
-                CMS pays $62-$109 per patient per month for CCM services. With
-                proper enrollment, a 1,000-patient practice can generate
-                $200,000+ annually.
-              </p>
-            </div>
+          </div>
+          <div className="mt-8 bg-[#1e3a5f] rounded-xl p-6 text-center">
+            <p className="text-white text-xl font-bold">
+              Combined, a 1,000-patient practice can generate{" "}
+              <span className="text-[#22c55e]">$300,000+</span> annually from
+              CCM and RPM alone.
+            </p>
           </div>
         </div>
       </section>
@@ -113,7 +116,7 @@ export default function LandingPage() {
       <section className="py-20">
         <div className="max-w-5xl mx-auto px-6">
           <h2 className="text-3xl md:text-4xl font-bold text-center text-[#1e3a5f] mb-4">
-            What the Calculator Shows You
+            What the Calculators Show You
           </h2>
           <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
             Input your practice data, get actionable revenue projections in
@@ -121,11 +124,11 @@ export default function LandingPage() {
           </p>
           <div className="grid md:grid-cols-2 gap-6">
             {[
-              "Monthly & annual CCM revenue potential",
+              "Monthly & annual revenue potential for CCM and RPM",
               "Revenue breakdown by payer (Medicare, Medicaid, Commercial)",
-              "Staffing requirements and costs",
-              "Net profit after staffing expenses",
-              "ROI percentage on your staffing investment",
+              "Staffing requirements, costs, and capacity utilization",
+              "Device costs and leasing impact (RPM)",
+              "Net profit and ROI on your staffing investment",
               "Revenue per provider in your practice",
             ].map((item, i) => (
               <div key={i} className="flex items-start gap-3 p-4">
@@ -139,6 +142,124 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Pricing */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-5xl mx-auto px-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-center text-[#1e3a5f] mb-12">
+            Choose Your Calculator
+          </h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* CCM Only */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 flex flex-col">
+              <h3 className="text-xl font-bold text-[#1e3a5f] mb-2">
+                CCM Calculator
+              </h3>
+              <p className="text-gray-500 text-sm mb-4">
+                Chronic Care Management revenue projections
+              </p>
+              <div className="text-4xl font-extrabold text-[#1e3a5f] mb-6">
+                $49
+              </div>
+              <ul className="space-y-2 mb-8 flex-grow">
+                {[
+                  "CCM revenue projections",
+                  "Payer mix breakdown",
+                  "Staffing ROI analysis",
+                  "Lifetime access",
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
+                    <span className="text-[#22c55e] font-bold">✓</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <button
+                onClick={() => handleCheckout("/api/checkout", "ccm")}
+                disabled={loading === "ccm"}
+                className="w-full bg-white border-2 border-[#22c55e] text-[#22c55e] hover:bg-[#22c55e] hover:text-white font-bold py-3 rounded-xl transition-colors disabled:opacity-50"
+              >
+                {loading === "ccm" ? "Loading..." : "Get CCM Calculator"}
+              </button>
+            </div>
+
+            {/* Bundle - Featured */}
+            <div className="bg-white rounded-xl shadow-lg border-2 border-[#22c55e] p-8 flex flex-col relative">
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#22c55e] text-white text-sm font-bold px-4 py-1 rounded-full">
+                BEST VALUE
+              </div>
+              <h3 className="text-xl font-bold text-[#1e3a5f] mb-2">
+                CCM + RPM Bundle
+              </h3>
+              <p className="text-gray-500 text-sm mb-4">
+                Both calculators — save $19
+              </p>
+              <div className="text-4xl font-extrabold text-[#22c55e] mb-1">
+                $79
+              </div>
+              <p className="text-sm text-gray-400 line-through mb-5">$98</p>
+              <ul className="space-y-2 mb-8 flex-grow">
+                {[
+                  "Everything in CCM Calculator",
+                  "Everything in RPM Calculator",
+                  "Combined revenue dashboard",
+                  "Priority strategy call booking",
+                  "Lifetime access to both",
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
+                    <span className="text-[#22c55e] font-bold">✓</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <button
+                onClick={() =>
+                  handleCheckout("/api/bundle-checkout", "bundle")
+                }
+                disabled={loading === "bundle"}
+                className="w-full bg-[#22c55e] hover:bg-[#16a34a] text-white font-bold py-3 rounded-xl transition-colors disabled:opacity-50"
+              >
+                {loading === "bundle" ? "Loading..." : "Get Both — $79"}
+              </button>
+            </div>
+
+            {/* RPM Only */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 flex flex-col">
+              <h3 className="text-xl font-bold text-[#1e3a5f] mb-2">
+                RPM Calculator
+              </h3>
+              <p className="text-gray-500 text-sm mb-4">
+                Remote Patient Monitoring revenue projections
+              </p>
+              <div className="text-4xl font-extrabold text-[#1e3a5f] mb-6">
+                $49
+              </div>
+              <ul className="space-y-2 mb-8 flex-grow">
+                {[
+                  "RPM revenue projections",
+                  "Device cost analysis",
+                  "Staffing ROI analysis",
+                  "Lifetime access",
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
+                    <span className="text-[#0891b2] font-bold">✓</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <button
+                onClick={() =>
+                  handleCheckout("/api/rpm-checkout", "rpm")
+                }
+                disabled={loading === "rpm"}
+                className="w-full bg-white border-2 border-[#0891b2] text-[#0891b2] hover:bg-[#0891b2] hover:text-white font-bold py-3 rounded-xl transition-colors disabled:opacity-50"
+              >
+                {loading === "rpm" ? "Loading..." : "Get RPM Calculator"}
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Credibility */}
       <section className="py-20 bg-[#1e3a5f] text-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
@@ -146,10 +267,10 @@ export default function LandingPage() {
             Built by Healthcare Operations Experts
           </h2>
           <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            This calculator is built on real-world CCM implementation data from
-            practices across the country. The billing rates, staffing models,
-            and enrollment benchmarks come from years of hands-on experience
-            running healthcare operations.
+            These calculators are built on real-world CCM and RPM implementation
+            data from practices across the country. The billing rates, staffing
+            models, and enrollment benchmarks come from years of hands-on
+            experience running healthcare operations.
           </p>
           <div className="grid grid-cols-3 gap-8 max-w-lg mx-auto mb-12">
             <div>
@@ -173,13 +294,6 @@ export default function LandingPage() {
               </div>
             </div>
           </div>
-          <button
-            onClick={handleCheckout}
-            disabled={loading}
-            className="bg-[#22c55e] hover:bg-[#16a34a] text-white text-lg font-bold px-10 py-5 rounded-xl transition-all transform hover:scale-105 shadow-lg disabled:opacity-50"
-          >
-            {loading ? "Loading..." : "Calculate My Revenue — $49"}
-          </button>
         </div>
       </section>
 
@@ -192,20 +306,20 @@ export default function LandingPage() {
           <div className="space-y-6">
             {[
               {
-                q: "What is Chronic Care Management (CCM)?",
-                a: "CCM is a Medicare program (CPT 99490, 99439, 99491) that reimburses practices for non-face-to-face care coordination for patients with two or more chronic conditions. It's one of the most under-utilized revenue streams in primary care.",
+                q: "What is CCM and RPM?",
+                a: "CCM (Chronic Care Management) and RPM (Remote Patient Monitoring) are Medicare programs that reimburse practices for non-face-to-face patient care. CCM covers care coordination for patients with 2+ chronic conditions. RPM covers monitoring patients with connected devices like blood pressure cuffs and glucose monitors.",
               },
               {
-                q: "How accurate is this calculator?",
-                a: "The calculator uses 2026 CMS reimbursement rates and industry-standard staffing benchmarks. Results are conservative estimates — actual revenue often exceeds projections once a program is optimized.",
+                q: "How accurate are these calculators?",
+                a: "The calculators use 2026 CMS reimbursement rates and industry-standard staffing benchmarks. Results are conservative estimates — actual revenue often exceeds projections once a program is optimized.",
               },
               {
-                q: "Do I get to keep the calculator?",
-                a: "Yes. One-time payment, lifetime access. Come back and recalculate as your practice grows or your payer mix changes.",
+                q: "Should I get CCM, RPM, or both?",
+                a: "If your practice serves Medicare patients with chronic conditions, both programs apply. Many patients qualify for CCM and RPM simultaneously, and the revenue stacks. The bundle gives you the complete picture for just $79.",
               },
               {
-                q: "What if I need help implementing CCM?",
-                a: "After you see your numbers, you can book a free 30-minute strategy call with our team. We'll walk through exactly how to capture that revenue.",
+                q: "What if I need help implementing?",
+                a: "After you see your numbers, you can book a free 30-minute strategy call. We'll walk through exactly how to launch CCM, RPM, or both — and start generating revenue within 60-90 days.",
               },
             ].map((faq, i) => (
               <div
@@ -229,15 +343,19 @@ export default function LandingPage() {
             Stop Guessing. Start Calculating.
           </h2>
           <p className="text-xl text-gray-600 mb-8">
-            For the cost of a team lunch, find out exactly how much CCM revenue
-            your practice is leaving on the table.
+            For less than the cost of a team lunch, find out exactly how much
+            CCM and RPM revenue your practice is leaving on the table.
           </p>
           <button
-            onClick={handleCheckout}
-            disabled={loading}
+            onClick={() =>
+              handleCheckout("/api/bundle-checkout", "final")
+            }
+            disabled={loading === "final"}
             className="bg-[#22c55e] hover:bg-[#16a34a] text-white text-xl font-bold px-12 py-5 rounded-xl transition-all transform hover:scale-105 shadow-lg disabled:opacity-50"
           >
-            {loading ? "Loading..." : "Calculate My Revenue — $49"}
+            {loading === "final"
+              ? "Loading..."
+              : "Get Both Calculators — $79"}
           </button>
         </div>
       </section>
