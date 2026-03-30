@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "CCM Revenue Calculator | Augeo Healthcare",
+  title: "CCM Revenue Calculator | Healthcare Industry Partners",
   description:
     "Discover how much Chronic Care Management revenue your practice is leaving on the table. Calculate your potential CCM income in minutes.",
   openGraph: {
-    title: "CCM Revenue Calculator | Augeo Healthcare",
+    title: "CCM Revenue Calculator | Healthcare Industry Partners",
     description:
       "Most practices with 500+ Medicare patients miss $30,000-$150,000/year in CCM revenue. Find your exact number.",
     type: "website",

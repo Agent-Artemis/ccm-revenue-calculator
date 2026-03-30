@@ -27,8 +27,9 @@ export default function LandingPage() {
       {/* Hero */}
       <header className="bg-[#1e3a5f] text-white">
         <nav className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-          <div className="text-xl font-bold tracking-tight">
-            Augeo <span className="text-[#22c55e]">Healthcare</span>
+          <div className="flex items-center gap-3">
+            <img src="/hcip-icon.jpg" alt="HCIP" className="h-8 w-8 rounded-full" />
+            <span className="text-xl font-bold tracking-tight">Healthcare Industry Partners</span>
           </div>
           <button
             onClick={() => handleCheckout("/api/bundle-checkout", "nav")}
@@ -367,7 +368,7 @@ export default function LandingPage() {
       <footer className="bg-[#1e3a5f] text-blue-200 py-8">
         <div className="max-w-6xl mx-auto px-6 text-center text-sm">
           <p>
-            &copy; {new Date().getFullYear()} Augeo LLC. All rights reserved.
+            &copy; {new Date().getFullYear()} Healthcare Industry Partners. All rights reserved.
           </p>
           <p className="mt-2">
             Built by healthcare operations experts who&apos;ve been in the
