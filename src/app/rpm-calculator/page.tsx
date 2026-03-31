@@ -234,7 +234,7 @@ export default function RPMCalculatorPage() {
     doc.text("RPM Revenue Analysis", 20, 25);
     doc.setFontSize(10);
     doc.setTextColor(100);
-    doc.text(`Prepared by HCIP | ${new Date().toLocaleDateString()}`, 20, 33);
+    doc.text(`Prepared by Augeo Health | ${new Date().toLocaleDateString()}`, 20, 33);
     doc.setDrawColor(30, 58, 95);
     doc.line(20, 37, 190, 37);
     doc.setFontSize(14);
@@ -291,7 +291,7 @@ export default function RPMCalculatorPage() {
     doc.text("https://cal.com/agentartemis/30-minutes-with-jeff-oldroyd", 20, 266);
     doc.setFontSize(8);
     doc.setTextColor(150);
-    doc.text("HCIP - Health Care Industry Partners | Confidential", 20, 280);
+    doc.text("Augeo Health | Confidential", 20, 280);
     doc.save("RPM-Revenue-Analysis.pdf");
   }, [inputs, results]);
 
@@ -300,7 +300,7 @@ export default function RPMCalculatorPage() {
       <header className="bg-[#1e3a5f] text-white py-4">
         <div className="max-w-6xl mx-auto px-6 flex justify-between items-center">
           <div className="text-xl font-bold tracking-tight">
-            HCIP <span className="text-[#0891b2]">Healthcare</span>
+            Augeo <span className="text-[#0891b2]">Health</span>
           </div>
           <div className="text-sm text-blue-200">RPM Revenue Calculator</div>
         </div>

@@ -28,7 +28,7 @@ export default function LandingPage() {
       <header className="bg-[#1e3a5f] text-white">
         <nav className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <img src="/hcip-icon.jpg" alt="HCIP" className="h-8 w-8 rounded-full" />
+            <img src="/augeo-health-logo.jpg" alt="Augeo Health" className="h-8 w-8 rounded-full" />
             <span className="text-xl font-bold tracking-tight">Healthcare Industry Partners</span>
           </div>
           <button
